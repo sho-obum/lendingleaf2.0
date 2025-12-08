@@ -61,22 +61,19 @@ export const companyLinks: NavItemType[] = [
 	{ title: "Help Center", href: "#", icon: HelpCircle, description: "Find answers to your questions" },
 ];
 
+import LogoLL from "../images/LogoLL.png";
+import Image from "next/image";
+
 export function Navbar() {
 	return (
-		<div className="relative w-full px-4">
-			<div
-				aria-hidden="true"
-				className={cn(
-					"absolute inset-0 -z-10 size-full",
-					"bg-[radial-gradient(color-mix(in_oklab,--theme(--color-foreground/.2)30%,transparent)_2px,transparent_2px)]",
-					"bg-[size:12px_12px]",
-				)}
-			/>
-			<div className="bg-background sticky top-0 z-50 mx-auto h-14 w-full max-w-5xl border px-4 rounded-lg backdrop-blur supports-[backdrop-filter]:bg-background/70">
+		
+		<div className="relative w-full px-4 ">
+			<div className="bg-background absolute top-5 left-1/2 transform -translate-x-1/2 z-50 h-14 w-full max-w-5xl border px-4 rounded-lg backdrop-blur supports-[backdrop-filter]:bg-background/70">
 				<div className="flex h-full items-center justify-between">
 					<div className="flex items-center gap-2">
-						<Grid2x2PlusIcon className="size-6" />
-						<p className="font-mono text-lg font-bold">LendingLeaf</p>
+						{/* <Grid2x2PlusIcon className="size-6" /> */}
+						{/* <p className="font-mono text-lg font-bold">LendingLeaf</p> */}
+						<Image src={LogoLL} alt="LendingLeaf Logo" className="h-8 w-auto" />
 					</div>
 					<DesktopMenu />
 					<div className="flex items-center gap-2">

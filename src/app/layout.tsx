@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Termina from "next/font/local";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
@@ -11,6 +12,20 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const termina = Termina({
+  src: [
+    { path: "./../../public/fonts/termina-thin.otf", weight: "100" },
+    { path: "./../../public/fonts/termina-light.otf", weight: "300" },
+    { path: "./../../public/fonts/termina-regular.otf", weight: "400" },
+    { path: "./../../public/fonts/termina-medium.otf", weight: "500" },
+    { path: "./../../public/fonts/termina-demi.otf", weight: "600" },
+    { path: "./../../public/fonts/termina-bold.otf", weight: "700" },
+    { path: "./../../public/fonts/termina-heavy.otf", weight: "800" },
+    { path: "./../../public/fonts/termina-black.otf", weight: "900" },
+  ],
+  variable: "--font-termina",
 });
 
 export const metadata: Metadata = {
@@ -26,7 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${termina.variable} antialiased`}
       >
         <Navbar />
         <main>{children}</main>

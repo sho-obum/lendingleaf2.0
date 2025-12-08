@@ -1,11 +1,20 @@
-// Home page integrating Tailwind v4 test section and Skiper19 scroll animation
-import { Skiper19 } from "@/components/ui/skiper-ui/skiper19";
+import Hero from "@/components/sections/Hero";
+import Services from "../components/sections/Services";
+import Steps from "@/components/sections/Steps";
+import EMICalculator from "@/components/sections/EMICalculator";
+import { MarqueeAnimation } from "@/components/sections/MarqueeBanner";
+
+
+
 
 export default function Home() {
   return (
     <>
       <div className="overflow-hidden">
-        <Skiper19 />
+       <Hero />
+       <Services />
+       <Steps />
+       <EMICalculator />
       </div>
     </>
   );
