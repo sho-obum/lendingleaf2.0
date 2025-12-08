@@ -66,8 +66,7 @@ import Image from "next/image";
 
 export function Navbar() {
 	return (
-		
-		<div className="relative w-full px-4 ">
+		<div className="relative w-full px-4">
 			<div className="bg-background absolute top-5 left-1/2 transform -translate-x-1/2 z-50 h-14 w-full max-w-5xl border px-4 rounded-lg backdrop-blur supports-[backdrop-filter]:bg-background/70">
 				<div className="flex h-full items-center justify-between">
 					<div className="flex items-center gap-2">

@@ -192,7 +192,7 @@ export default function EMICalculator() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden py-24 md:py-32 bg-gradient-to-br from-white via-[#f8fdf2] to-[#eefe92]/10"
+      className="relative overflow-hidden py-24 md:py-32"
     >
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

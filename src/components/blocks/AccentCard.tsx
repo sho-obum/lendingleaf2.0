@@ -106,14 +106,17 @@ export default function CreditScoreCard() {
       animateToTarget(350, targetScore, 1500);
       
       setTimeout(() => {
-        // target → 350 (1.5s)
-        animateToTarget(targetScore, 350, 1500);
-        
+        // Wait 3 seconds at target score
         setTimeout(() => {
-          // Wait 2 seconds, then next cycle
-          currentTargetIndex = (currentTargetIndex + 1) % randomTargets.length;
-          runCycle();
-        }, 1500 + 2000); // 1.5s animation + 2s wait
+          // target → 350 (1.5s)
+          animateToTarget(targetScore, 350, 1500);
+          
+          setTimeout(() => {
+            // Wait 3 seconds at lower limit, then next cycle
+            currentTargetIndex = (currentTargetIndex + 1) % randomTargets.length;
+            runCycle();
+          }, 1500 + 3000); // 1.5s animation + 3s wait
+        }, 3000); // 3s pause at max
       }, 1500);
     };
     
@@ -137,13 +140,13 @@ export default function CreditScoreCard() {
     return () => clearInterval(interval);
   }, [isDemoMode, hasInteracted]);
 
-  // Smooth transition animation when user starts interacting
+  // Fast transition animation when user starts interacting
   React.useEffect(() => {
     if (!isTransitioning) return;
     
     let frameId: number;
     const startScore = transitionScore ?? demoScore;
-    const duration = 800; // smooth 800ms fade down
+    const duration = 300; // fast 300ms fade down
     const startTime = performance.now();
     
     const animateTransition = (now: number) => {
@@ -151,8 +154,8 @@ export default function CreditScoreCard() {
       const progress = Math.min(1, elapsed / duration);
       // Ease out cubic for smooth deceleration
       const eased = 1 - Math.pow(1 - progress, 3);
-      // Animate down to 370 instead of MIN_SCORE
-      const newScore = Math.round(startScore - (startScore - 370) * eased);
+      // Animate down to MIN_SCORE
+      const newScore = Math.round(startScore - (startScore - MIN_SCORE) * eased);
       setTransitionScore(newScore);
       
       if (progress < 1) {
@@ -198,16 +201,16 @@ export default function CreditScoreCard() {
 
   // Display logic
   const displayScore = isTransitioning && transitionScore !== null 
-    ? transitionScore 
+    ? (transitionScore === MIN_SCORE ? "---" : transitionScore)
     : isDemoMode && !hasInteracted 
-      ? demoScore 
+      ? (demoScore === 350 ? "---" : demoScore)
       : "---";
   const currentScore = isTransitioning && transitionScore !== null
     ? transitionScore
     : isDemoMode && !hasInteracted 
       ? demoScore 
-      : 370; // Stuck at 370 position when user interacts
-  const band = getBand(currentScore);
+      : MIN_SCORE; // Use MIN_SCORE when user interacts
+  const band = (!isDemoMode && hasInteracted && displayScore === "---") ? null : getBand(currentScore);
   const bandColor = getBandColor(band);
   const progress = currentScore == null ? 0 : Math.max(0, Math.min(1, (currentScore - MIN_SCORE) / (MAX_SCORE - MIN_SCORE)));
   const isFormValid = name.trim().length >= 2 && phone.length === 10;

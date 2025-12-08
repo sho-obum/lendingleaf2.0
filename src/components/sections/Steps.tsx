@@ -77,7 +77,7 @@ export default function Steps() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden py-24 md:py-32 bg-gradient-to-tl from-[#eefe92]/10 via-[#f8fdf2] to-white"
+      className="relative overflow-hidden py-24 md:py-32"
     >
       {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

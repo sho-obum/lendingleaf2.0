@@ -10,7 +10,7 @@ import LogoCloud from "../blocks/LogoCloud";
 
 const Hero = () => {
   return (
-    <section className="min-h-[100dvh] relative overflow-hidden bg-gradient-to-br from-white via-[#f8fdf2] to-[#eefe92]/10">
+    <section className="min-h-[100dvh] relative overflow-hidden">
       {/* Subtle animated background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#eefe92]/30 rounded-full blur-3xl animate-pulse" />
@@ -46,14 +46,14 @@ const Hero = () => {
           </div> */}
 
           {/* Main Headline */}
-          <h1 className="font-termina text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-[#213d4f] leading-[1.15] tracking-tight mt-4 sm:mt-6">
+          <h1 className="font-termina lg:mt-24 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-[#213d4f] leading-[1.15] tracking-tight mt-4 sm:mt-6">
             Know your score.
             <br />
             <span className="relative inline-block">
               <span className="relative z-10">Unlock</span>
               <span className="absolute bottom-0.5 sm:bottom-1 left-0 w-full h-2 sm:h-3 bg-[#eefe92] -z-0 rounded"></span>
             </span>{" "}
-            <span className="text-[#4d7c0f]">better 
+            <span className="text-[#82c200]">better 
                 <span className="text-2xl sm:text-3xl md:text-4xl ml-2 sm:ml-3">₹</span>
                  ates.</span>
           </h1>
@@ -119,8 +119,6 @@ const Hero = () => {
         />
       </div>
 
-      {/* Bottom fade for smooth transition to next section */}
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white to-transparent pointer-events-none" />
     </section>
   );
 };

@@ -188,10 +188,7 @@ function ServicesSection() {
   ];
 
   return (
-    <div className="relative min-h-screen w-full bg-gradient-to-tl from-[#eefe92]/10 via-[#f8fdf2] to-white text-[#213d4f]">
-      {/* Top vignette overlay */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-white/40 via-white/40 to-transparent pointer-events-none" />
-      
+    <div className="relative min-h-screen w-full text-[#213d4f]">
       {/* Subtle animated background blobs - exact match to Hero */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#eefe92]/30 rounded-full blur-3xl animate-pulse" />
