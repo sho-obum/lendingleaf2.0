@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import LoanApplicationForm from "@/components/blocks/LoanApplicationForm";
+import LoanApplicationForm from "../../../components/blocks/LoanApplicationForm";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { Button } from "@/components/ui/button";
