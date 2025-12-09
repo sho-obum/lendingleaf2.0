@@ -13,9 +13,16 @@ import {
   Fuel,
   CreditCard,
   ArrowRight,
+  User,
+  Phone,
+  Mail,
+  Briefcase,
+  IndianRupee,
+  CheckCircle,
 } from "lucide-react";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Image from "next/image";
 
 interface CreditCardData {
@@ -444,7 +451,262 @@ export default function CreditCards() {
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
+
+        {/* Credit Card Application Form */}
+        <CreditCardForm isVisible={isVisible} />
       </div>
     </section>
+  );
+}
+
+// Credit Card Application Form Component
+function CreditCardForm({ isVisible }: { isVisible: boolean }) {
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    employmentType: "",
+    monthlyIncome: "",
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    }, 1500);
+  };
+
+  const incomeRanges = [
+    "Below ₹25,000",
+    "₹25,000 - ₹50,000",
+    "₹50,000 - ₹1,00,000",
+    "₹1,00,000 - ₹2,00,000",
+    "Above ₹2,00,000",
+  ];
+
+  if (isSubmitted) {
+    return (
+      <div
+        className={`mt-16 sm:mt-20 lg:mt-24 transition-all duration-700 delay-300 ${
+          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+        }`}
+      >
+        <div className="relative max-w-2xl mx-auto">
+          <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-[#eefe92]/50 shadow-2xl shadow-[#4d7c0f]/10 p-8 sm:p-12 text-center overflow-hidden">
+            {/* Success Animation */}
+            <div className="relative z-10">
+              <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-[#4d7c0f] to-[#22c55e] rounded-full flex items-center justify-center animate-bounce">
+                <CheckCircle className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl sm:text-3xl font-bold text-[#213d4f] mb-3">
+                Application Received! 🎉
+              </h3>
+              <p className="text-[#213d4f]/60 mb-6 max-w-md mx-auto">
+                Our credit card experts will review your application and contact you within 24 hours with the best card recommendations.
+              </p>
+              <Button
+                onClick={() => setIsSubmitted(false)}
+                variant="outline"
+                className="border-2 border-[#4d7c0f] text-[#4d7c0f] hover:bg-[#4d7c0f] hover:text-white rounded-xl"
+              >
+                Submit Another Application
+              </Button>
+            </div>
+            
+            {/* Background decoration */}
+            <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#eefe92]/30 rounded-full blur-3xl" />
+            <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-[#22c55e]/20 rounded-full blur-3xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`mt-16 sm:mt-20 lg:mt-24 transition-all duration-700 delay-300 ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}
+    >
+      <div className="relative max-w-4xl mx-auto">
+        {/* Form Header */}
+        {/* <div className="text-center mb-8 sm:mb-10">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-[#eefe92]/40 to-[#4d7c0f]/10 rounded-full mb-4">
+            <Sparkles className="w-4 h-4 text-[#4d7c0f]" />
+            <span className="text-xs font-semibold text-[#4d7c0f] uppercase tracking-wider">
+              Quick Application
+            </span>
+          </div>
+          <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#213d4f] mb-3">
+            Get Your{" "}
+            <span className="relative inline-block">
+              <span className="relative z-10 text-[#4d7c0f]">Best Card</span>
+              <span className="absolute bottom-1 left-0 w-full h-2 bg-[#eefe92] -z-0 rounded"></span>
+            </span>{" "}
+            Match
+          </h3>
+          <p className="text-[#213d4f]/60 max-w-lg mx-auto">
+            Fill in your details and we'll recommend the perfect credit card for your lifestyle and spending habits.
+          </p>
+        </div> */}
+
+        {/* Form Card */}
+        <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-[#eefe92]/50 shadow-2xl shadow-[#4d7c0f]/10 overflow-hidden">
+          {/* Decorative gradient */}
+          <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#4d7c0f] via-[#22c55e] to-[#eefe92]" />
+          
+          <form onSubmit={handleSubmit} className="p-6 sm:p-8 lg:p-10">
+            <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
+              {/* Name */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                  <User className="w-4 h-4 text-[#4d7c0f]" />
+                  Full Name
+                </label>
+                <Input
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  required
+                  className="h-12 sm:h-13 rounded-xl border-[#213d4f]/10 focus:border-[#4d7c0f] focus:ring-[#4d7c0f]/20 bg-white/50"
+                />
+              </div>
+
+              {/* Phone */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-[#4d7c0f]" />
+                  Mobile Number
+                </label>
+                <Input
+                  type="tel"
+                  placeholder="+91 XXXXX XXXXX"
+                  value={formData.phone}
+                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                  required
+                  className="h-12 sm:h-13 rounded-xl border-[#213d4f]/10 focus:border-[#4d7c0f] focus:ring-[#4d7c0f]/20 bg-white/50"
+                />
+              </div>
+
+              {/* Email */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-[#4d7c0f]" />
+                  Email Address
+                </label>
+                <Input
+                  type="email"
+                  placeholder="you@example.com"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  required
+                  className="h-12 sm:h-13 rounded-xl border-[#213d4f]/10 focus:border-[#4d7c0f] focus:ring-[#4d7c0f]/20 bg-white/50"
+                />
+              </div>
+
+              {/* Employment Type */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                  <Briefcase className="w-4 h-4 text-[#4d7c0f]" />
+                  Employment Type
+                </label>
+                <select
+                  value={formData.employmentType}
+                  onChange={(e) => setFormData({ ...formData, employmentType: e.target.value })}
+                  required
+                  className="w-full h-12 sm:h-13 px-4 rounded-xl border border-[#213d4f]/10 focus:border-[#4d7c0f] focus:ring-2 focus:ring-[#4d7c0f]/20 bg-white/50 text-sm outline-none cursor-pointer"
+                >
+                  <option value="">Select employment type</option>
+                  <option value="salaried">Salaried</option>
+                  <option value="self-employed">Self Employed</option>
+                  <option value="business">Business Owner</option>
+                  <option value="student">Student</option>
+                  <option value="retired">Retired</option>
+                </select>
+              </div>
+
+              {/* Monthly Income - Full Width */}
+              <div className="sm:col-span-2 space-y-2">
+                <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                  <IndianRupee className="w-4 h-4 text-[#4d7c0f]" />
+                  Monthly Income
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-3">
+                  {incomeRanges.map((range) => (
+                    <button
+                      key={range}
+                      type="button"
+                      onClick={() => setFormData({ ...formData, monthlyIncome: range })}
+                      className={`py-3 px-3 rounded-xl text-xs sm:text-sm font-medium transition-all duration-300 border-2 ${
+                        formData.monthlyIncome === range
+                          ? "bg-[#4d7c0f] text-white border-[#4d7c0f] shadow-lg shadow-[#4d7c0f]/25"
+                          : "bg-white/50 text-[#213d4f]/70 border-[#213d4f]/10 hover:border-[#4d7c0f]/30 hover:bg-[#f8fdf2]"
+                      }`}
+                    >
+                      {range}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Submit Button */}
+            <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
+              <Button
+                type="submit"
+                disabled={isSubmitting || !formData.monthlyIncome}
+                className="w-full sm:w-auto h-13 px-10 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold rounded-xl shadow-lg shadow-[#4d7c0f]/25 hover:shadow-xl hover:shadow-[#4d7c0f]/30 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? (
+                  <span className="flex items-center gap-2">
+                    <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                    </svg>
+                    Processing...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    <Sparkles className="w-5 h-5" />
+                    Get Card Recommendations
+                    <ArrowRight className="w-5 h-5" />
+                  </span>
+                )}
+              </Button>
+              <p className="text-xs text-[#213d4f]/50 text-center sm:text-left">
+                By submitting, you agree to our Terms & Privacy Policy
+              </p>
+            </div>
+          </form>
+
+          {/* Background decorations */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#eefe92]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-[#22c55e]/10 rounded-full blur-3xl pointer-events-none" />
+        </div>
+
+        {/* Trust indicators */}
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs text-[#213d4f]/50">
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-[#4d7c0f]" />
+            <span>100% Free Service</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-[#4d7c0f]" />
+            <span>No Credit Score Impact</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Check className="w-4 h-4 text-[#4d7c0f]" />
+            <span>Expert Recommendations</span>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }

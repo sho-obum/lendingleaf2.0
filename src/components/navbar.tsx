@@ -24,10 +24,13 @@ import {
   Umbrella,
   Zap,
   TrendingUp,
+  Headphones,
+  ArrowUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger, SheetContent, SheetClose } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+
 
 // Types
 interface NavLink {
@@ -62,6 +65,7 @@ export const companyLinks: NavLink[] = [
 
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const navRef = useRef<HTMLDivElement>(null);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -70,6 +74,7 @@ export function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      setShowScrollTop(window.scrollY > 400);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -95,6 +100,13 @@ export function Navbar() {
     timeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
     }, 100);
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -185,37 +197,41 @@ export function Navbar() {
         ref={navRef}
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-700 ease-out",
-          isScrolled ? "py-3" : "py-5"
+          isScrolled ? "py-3 px-4 sm:px-6 lg:px-8" : "py-0"
         )}
       >
-        <div className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-          <nav
-            className={cn(
-              "relative flex items-center justify-between px-5 sm:px-8 transition-all duration-500",
-              isScrolled
-                ? "h-16 bg-white/90 backdrop-blur-2xl rounded-2xl border border-[#eefe92]/50 nav-magical"
-                : "h-18 bg-gradient-to-r from-white/80 via-[#f8fdf2]/80 to-white/80 backdrop-blur-xl rounded-3xl border border-[#4d7c0f]/10"
+        <nav
+          className={cn(
+            "relative flex items-center justify-between transition-all duration-500 max-w-7xl mx-auto",
+            isScrolled
+              ? "h-16 bg-[#f8fdf2]/80 backdrop-blur-2xl rounded-2xl border border-[#4d7c0f]/10 shadow-lg shadow-[#4d7c0f]/5 px-5 sm:px-8"
+              : "h-20 bg-transparent px-4 sm:px-6 lg:px-8 xl:px-20"
+          )}
+        >
+            {/* Magical gradient border effect - only on scroll */}
+            {isScrolled && (
+              <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none">
+                <div className="absolute inset-0 bg-gradient-to-r from-[#eefe92]/20 via-[#f8fdf2]/50 to-[#eefe92]/20 gradient-animate" />
+                <div className="absolute inset-0 border border-[#4d7c0f]/10 rounded-2xl" />
+              </div>
             )}
-          >
-            {/* Magical gradient border effect */}
-            <div className="absolute inset-0 rounded-2xl sm:rounded-3xl overflow-hidden pointer-events-none">
-              <div className="absolute inset-0 bg-gradient-to-r from-[#4d7c0f]/5 via-[#eefe92]/10 to-[#22c55e]/5 gradient-animate" />
-            </div>
 
-            {/* Floating particles decoration */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl sm:rounded-3xl">
-              {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute w-1 h-1 bg-[#4d7c0f]/30 rounded-full float-particle"
-                  style={{
-                    left: `${15 + i * 20}%`,
-                    top: `${30 + (i % 2) * 40}%`,
-                    animationDelay: `${i * 0.5}s`,
-                  }}
-                />
-              ))}
-            </div>
+            {/* Floating particles decoration - only when scrolled */}
+            {isScrolled && (
+              <div className="absolute inset-0 overflow-hidden pointer-events-none rounded-2xl">
+                {[...Array(5)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="absolute w-1 h-1 bg-[#4d7c0f]/40 rounded-full float-particle"
+                    style={{
+                      left: `${15 + i * 20}%`,
+                      top: `${30 + (i % 2) * 40}%`,
+                      animationDelay: `${i * 0.5}s`,
+                    }}
+                  />
+                ))}
+              </div>
+            )}
 
             {/* Logo */}
             <Link href="/" className="relative z-10 flex items-center gap-2 group">
@@ -236,6 +252,9 @@ export function Navbar() {
                 </span>
               </span>
             </Link>
+
+            {/* Spacer to push navigation right */}
+            <div className="flex-1" />
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-1">
@@ -434,8 +453,8 @@ export function Navbar() {
                 )}
               >
                 <span className="relative z-10 flex items-center gap-2">
-                  <Sparkles className="w-4 h-4" />
-                  Get Started
+                  Get in touch
+                  <Headphones className="w-4 h-4" />
                 </span>
                 {/* Shine effect */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700" />
@@ -445,11 +464,28 @@ export function Navbar() {
               <MobileNav isScrolled={isScrolled} />
             </div>
           </nav>
-        </div>
       </header>
 
       {/* Spacer */}
-      <div className={cn("transition-all duration-500", isScrolled ? "h-[88px]" : "h-[112px]")} />
+      <div className={cn("transition-all duration-500", isScrolled ? "h-[88px]" : "h-[80px]")} />
+
+      {/* Scroll to Top Button */}
+      <button
+        onClick={scrollToTop}
+        className={cn(
+          "fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full transition-all duration-500",
+          "bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] text-white",
+          "shadow-lg shadow-[#4d7c0f]/30 hover:shadow-xl hover:shadow-[#4d7c0f]/40",
+          "hover:scale-110 hover:-translate-y-1",
+          "flex items-center justify-center group",
+          showScrollTop ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4 pointer-events-none"
+        )}
+        aria-label="Scroll to top"
+      >
+        <ArrowUp className="w-5 h-5 group-hover:animate-bounce" />
+        {/* Shine effect */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 overflow-hidden" />
+      </button>
     </>
   );
 }
@@ -581,8 +617,8 @@ function MobileNav({ isScrolled }: { isScrolled: boolean }) {
           <div className="flex gap-3">
           
             <Button className="flex-1 h-12 rounded-xl bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold shadow-lg shadow-[#4d7c0f]/25">
-              <Sparkles className="w-4 h-4 mr-2" />
-              Get Started
+              Get in touch
+              <Headphones className="w-4 h-4 mr-2" />
             </Button>
           </div>
         </div>

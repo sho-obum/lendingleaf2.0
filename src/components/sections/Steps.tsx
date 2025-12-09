@@ -77,7 +77,7 @@ export default function Steps() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden py-24 md:py-32"
+      className="relative overflow-hidden py-24 md:py-32 "
     >
       {/* Background blobs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -115,7 +115,7 @@ export default function Steps() {
         }
       `}</style>
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl -mt-44  ">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl lg:-mt-44  ">
         {/* Header */}
         <div
           className={`text-center mb-16 transition-all duration-700 ${

@@ -31,6 +31,8 @@ const Hero = () => {
           ]}
           className="fill-[#4d7c0f]/8 stroke-[#4d7c0f]/15"
         />
+        {/* Top vignette - makes grid fade from behind navbar */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-white via-white/80 to-transparent" />
       </div>
 
       <div className="min-h-[100dvh] grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-4 relative z-10 lg:order-reverse">

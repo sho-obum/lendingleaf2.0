@@ -5,6 +5,7 @@ import CreditScoreCard from "@/components/blocks/AccentCard";
 import WhyChooseUs from "@/components/sections/WhyChooseUs";
 import { GridPattern } from "@/components/ui/grid-pattern";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   TrendingUp,
   Shield,
@@ -18,6 +19,15 @@ import {
   BarChart3,
   Lock,
   Eye,
+  User,
+  Phone,
+  Calendar,
+  FileText,
+  ChevronRight,
+  Star,
+  BadgeCheck,
+  Fingerprint,
+  Gift,
 } from "lucide-react";
 
 export default function CreditScorePage() {
@@ -25,7 +35,18 @@ export default function CreditScorePage() {
   const [activeSection, setActiveSection] = useState(0);
   const [hoveredTip, setHoveredTip] = useState<number | null>(null);
   const [animatedStats, setAnimatedStats] = useState({ checks: 0, accuracy: 0 });
+  const [formStep, setFormStep] = useState(1);
+  const [formData, setFormData] = useState({
+    fullName: "",
+    phone: "",
+    dob: "",
+    pan: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const heroRef = useRef<HTMLDivElement>(null);
+  const formRef = useRef<HTMLDivElement>(null);
+  const [formVisible, setFormVisible] = useState(false);
 
   // Intersection observer for scroll animations
   useEffect(() => {
@@ -38,11 +59,26 @@ export default function CreditScorePage() {
       { threshold: 0.1 }
     );
 
+    const formObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setFormVisible(true);
+        }
+      },
+      { threshold: 0.2 }
+    );
+
     if (heroRef.current) {
       observer.observe(heroRef.current);
     }
+    if (formRef.current) {
+      formObserver.observe(formRef.current);
+    }
 
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      formObserver.disconnect();
+    };
   }, []);
 
   // Animate stats counter
@@ -196,18 +232,17 @@ export default function CreditScorePage() {
               </div>
 
               <div className="space-y-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[4rem] font-termina font-black text-[#213d4f] leading-[1.05] tracking-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-[3.5rem] font-termina font-black text-[#213d4f] leading-[1.1] tracking-tight">
                   Know your{" "}
                   <span className="relative inline-block">
                     <span className="relative z-10 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] bg-clip-text text-transparent">
                       score
                     </span>
                     <span className="absolute bottom-1 left-0 right-0 h-[0.3em] bg-[#eefe92] -z-0 -rotate-1 rounded-sm"></span>
-                  </span>
-                  <br />
+                  </span>{" "}
                   <span className="text-[#213d4f]/80">unlock better</span>{" "}
                   <span className="relative">
-                    <span className="text-[#4d7c0f]">₹</span>ates
+                    <span className="text-[#4d7c0f] text-4xl">₹</span>ates
                   </span>
                 </h1>
                 <p className="text-base sm:text-lg md:text-xl text-[#213d4f]/60 max-w-xl leading-relaxed">
@@ -292,6 +327,400 @@ export default function CreditScorePage() {
         </div>
 
         <GridPattern className="absolute inset-0 -z-10 opacity-30" />
+      </section>
+
+      {/* Credit Score Check Form Section */}
+      <section
+        ref={formRef}
+        className="relative py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-10 lg:px-14 xl:px-20 overflow-hidden"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            {/* Left - Form */}
+            <div
+              className={`transition-all duration-700 ${
+                formVisible ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-10"
+              }`}
+            >
+              {/* Form Header */}
+              <div className="mb-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#eefe92]/50 to-[#4d7c0f]/10 border border-[#4d7c0f]/20 mb-4">
+                  <Fingerprint className="w-4 h-4 text-[#4d7c0f]" />
+                  <span className="text-xs font-bold text-[#4d7c0f] uppercase tracking-wider">
+                    Free Score Check
+                  </span>
+                </div>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-termina font-black text-[#213d4f] mb-4">
+                  Get Your Score in{" "}
+                  <span className="relative inline-block">
+                    <span className="relative z-10 text-[#4d7c0f]">60 Seconds</span>
+                    <span className="absolute bottom-1 left-0 right-0 h-[0.3em] bg-[#eefe92] -z-0 -rotate-1 rounded-sm"></span>
+                  </span>
+                </h2>
+                <p className="text-[#213d4f]/60 text-base sm:text-lg">
+                  No credit card required. No impact on your score. Just instant insights.
+                </p>
+              </div>
+
+              {/* Progress Steps */}
+              <div className="flex items-center gap-2 mb-8">
+                {[1, 2].map((step) => (
+                  <React.Fragment key={step}>
+                    <div
+                      className={`relative flex items-center justify-center w-10 h-10 rounded-full font-bold text-sm transition-all duration-300 ${
+                        formStep >= step
+                          ? "bg-gradient-to-br from-[#4d7c0f] to-[#22c55e] text-white shadow-lg shadow-[#4d7c0f]/30"
+                          : "bg-[#213d4f]/10 text-[#213d4f]/40"
+                      }`}
+                    >
+                      {formStep > step ? (
+                        <CheckCircle2 className="w-5 h-5" />
+                      ) : (
+                        step
+                      )}
+                      {formStep === step && (
+                        <div className="absolute inset-0 rounded-full bg-[#4d7c0f]/30 animate-ping" />
+                      )}
+                    </div>
+                    {step < 2 && (
+                      <div
+                        className={`flex-1 h-1 rounded-full transition-all duration-500 ${
+                          formStep > step ? "bg-[#4d7c0f]" : "bg-[#213d4f]/10"
+                        }`}
+                      />
+                    )}
+                  </React.Fragment>
+                ))}
+              </div>
+
+              {/* Form Card */}
+              {!showSuccess ? (
+                <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-[#eefe92]/50 shadow-2xl shadow-[#4d7c0f]/10 overflow-hidden">
+                  {/* Gradient Top Border */}
+                  <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#4d7c0f] via-[#22c55e] to-[#eefe92]" />
+
+                  <div className="p-6 sm:p-8">
+                    {formStep === 1 ? (
+                      <div className="space-y-5">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                            <User className="w-4 h-4 text-[#4d7c0f]" />
+                            Full Name (as per PAN)
+                          </label>
+                          <Input
+                            type="text"
+                            placeholder="Enter your full name"
+                            value={formData.fullName}
+                            onChange={(e) =>
+                              setFormData({ ...formData, fullName: e.target.value })
+                            }
+                            className="h-13 rounded-xl border-[#213d4f]/10 focus:border-[#4d7c0f] focus:ring-[#4d7c0f]/20 bg-white/50 text-base"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                            <Phone className="w-4 h-4 text-[#4d7c0f]" />
+                            Mobile Number
+                          </label>
+                          <Input
+                            type="tel"
+                            placeholder="+91 XXXXX XXXXX"
+                            value={formData.phone}
+                            onChange={(e) =>
+                              setFormData({ ...formData, phone: e.target.value })
+                            }
+                            className="h-13 rounded-xl border-[#213d4f]/10 focus:border-[#4d7c0f] focus:ring-[#4d7c0f]/20 bg-white/50 text-base"
+                          />
+                        </div>
+
+                        <Button
+                          onClick={() => setFormStep(2)}
+                          disabled={!formData.fullName || !formData.phone}
+                          className="w-full h-13 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold rounded-xl shadow-lg shadow-[#4d7c0f]/25 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed group"
+                        >
+                          <span>Continue</span>
+                          <ChevronRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="space-y-5">
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-[#4d7c0f]" />
+                            Date of Birth
+                          </label>
+                          <Input
+                            type="date"
+                            value={formData.dob}
+                            onChange={(e) =>
+                              setFormData({ ...formData, dob: e.target.value })
+                            }
+                            className="h-13 rounded-xl border-[#213d4f]/10 focus:border-[#4d7c0f] focus:ring-[#4d7c0f]/20 bg-white/50 text-base"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
+                            <FileText className="w-4 h-4 text-[#4d7c0f]" />
+                            PAN Number
+                          </label>
+                          <Input
+                            type="text"
+                            placeholder="ABCDE1234F"
+                            value={formData.pan}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                pan: e.target.value.toUpperCase(),
+                              })
+                            }
+                            maxLength={10}
+                            className="h-13 rounded-xl border-[#213d4f]/10 focus:border-[#4d7c0f] focus:ring-[#4d7c0f]/20 bg-white/50 text-base uppercase"
+                          />
+                          <p className="text-xs text-[#213d4f]/40">
+                            Your PAN is required to fetch credit score from bureaus
+                          </p>
+                        </div>
+
+                        <div className="flex gap-3">
+                          <Button
+                            variant="outline"
+                            onClick={() => setFormStep(1)}
+                            className="h-13 px-6 border-2 border-[#213d4f]/10 text-[#213d4f] hover:bg-[#f8fdf2] rounded-xl"
+                          >
+                            Back
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              setIsSubmitting(true);
+                              setTimeout(() => {
+                                setIsSubmitting(false);
+                                setShowSuccess(true);
+                              }, 2000);
+                            }}
+                            disabled={!formData.dob || formData.pan.length !== 10 || isSubmitting}
+                            className="flex-1 h-13 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold rounded-xl shadow-lg shadow-[#4d7c0f]/25 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {isSubmitting ? (
+                              <span className="flex items-center gap-2">
+                                <svg className="animate-spin w-5 h-5" viewBox="0 0 24 24">
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                    fill="none"
+                                  />
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                  />
+                                </svg>
+                                Fetching Score...
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-2">
+                                <Sparkles className="w-5 h-5" />
+                                Get My Free Score
+                              </span>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Security Note */}
+                    <div className="mt-6 pt-5 border-t border-[#213d4f]/5 flex items-center gap-3">
+                      <Lock className="w-4 h-4 text-[#4d7c0f]" />
+                      <p className="text-xs text-[#213d4f]/50">
+                        Your data is encrypted with 256-bit SSL. We never share your information.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Decorative */}
+                  <div className="absolute -bottom-10 -right-10 w-32 h-32 bg-[#eefe92]/20 rounded-full blur-2xl pointer-events-none" />
+                </div>
+              ) : (
+                /* Success State */
+                <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-[#eefe92]/50 shadow-2xl shadow-[#4d7c0f]/10 p-8 sm:p-10 text-center overflow-hidden">
+                  <div className="relative z-10">
+                    <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-[#4d7c0f] to-[#22c55e] rounded-full flex items-center justify-center animate-bounce-subtle">
+                      <CheckCircle2 className="w-10 h-10 text-white" />
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-[#213d4f] mb-3">
+                      Score Retrieved! 🎉
+                    </h3>
+                    <div className="inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-[#f8fdf2] to-[#eefe92]/30 rounded-2xl border border-[#4d7c0f]/20 mb-4">
+                      <span className="text-sm text-[#213d4f]/60">Your Credit Score</span>
+                      <span className="text-4xl font-black text-[#4d7c0f]">752</span>
+                      <span className="px-2 py-1 bg-[#22c55e] text-white text-xs font-bold rounded-full">
+                        Good
+                      </span>
+                    </div>
+                    <p className="text-[#213d4f]/60 mb-6 max-w-sm mx-auto">
+                      Great score! You're eligible for premium loans and credit cards with best rates.
+                    </p>
+                    <Button
+                      onClick={() => {
+                        setShowSuccess(false);
+                        setFormStep(1);
+                        setFormData({ fullName: "", phone: "", dob: "", pan: "" });
+                      }}
+                      variant="outline"
+                      className="border-2 border-[#4d7c0f] text-[#4d7c0f] hover:bg-[#4d7c0f] hover:text-white rounded-xl"
+                    >
+                      Check Another Score
+                    </Button>
+                  </div>
+                  <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#eefe92]/30 rounded-full blur-3xl" />
+                  <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-[#22c55e]/20 rounded-full blur-3xl" />
+                </div>
+              )}
+
+              {/* Trust Badges Below Form */}
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-xs text-[#213d4f]/50">
+                <div className="flex items-center gap-1.5">
+                  <BadgeCheck className="w-4 h-4 text-[#4d7c0f]" />
+                  <span>RBI Approved</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Shield className="w-4 h-4 text-[#4d7c0f]" />
+                  <span>Bank-Grade Security</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Zap className="w-4 h-4 text-[#4d7c0f]" />
+                  <span>Instant Results</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right - Visual/Details */}
+            <div
+              className={`relative transition-all duration-700 delay-200 ${
+                formVisible ? "opacity-100 translate-x-0" : "opacity-0 translate-x-10"
+              }`}
+            >
+              {/* Main Visual Card */}
+              <div className="relative bg-gradient-to-br from-[#213d4f] via-[#2d5a6b] to-[#213d4f] rounded-3xl p-8 sm:p-10 overflow-hidden">
+                {/* Pattern Overlay */}
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.4%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6%204V0H4v4H0v2h4v4h2V6h4V4H6z%22%2F%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E')]" />
+                </div>
+
+                {/* Floating Badge */}
+                <div className="absolute -top-0 -right-3 px-4 py-2 bg-[#eefe92] rounded-lg shadow-lg">
+                  <span className="text-xs font-bold text-[#213d4f] flex items-center gap-1 ">
+                    <Gift className="w-3.5 h-3.5" />
+                   <p className="mr-2" > 
+
+                    100% FREE
+                   </p>
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="relative z-10">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-[#eefe92] flex items-center justify-center">
+                      <BarChart3 className="w-6 h-6 text-[#213d4f]" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white">Why Check Your Score?</h3>
+                      <p className="text-white/60 text-sm">Knowledge is power</p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 mb-8">
+                    {[
+                      { icon: Target, text: "Know where you stand financially", highlight: "Instant insights" },
+                      { icon: TrendingUp, text: "Get better loan interest rates", highlight: "Save ₹2L+" },
+                      { icon: Zap, text: "Faster loan approvals", highlight: "24-hour processing" },
+                      { icon: Shield, text: "Spot fraud or errors early", highlight: "Stay protected" },
+                    ].map((item, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 transition-all duration-300 group"
+                      >
+                        <div className="w-10 h-10 rounded-xl bg-[#eefe92]/20 flex items-center justify-center group-hover:bg-[#eefe92]/30 transition-colors">
+                          <item.icon className="w-5 h-5 text-[#eefe92]" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-white text-sm font-medium">{item.text}</p>
+                          <p className="text-[#eefe92] text-xs font-semibold">{item.highlight}</p>
+                        </div>
+                        <ArrowRight className="w-4 h-4 text-white/30 group-hover:text-[#eefe92] group-hover:translate-x-1 transition-all" />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Social Proof */}
+                  <div className="pt-6 border-t border-white/10">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="flex -space-x-2 mb-2">
+                          {[...Array(4)].map((_, i) => (
+                            <div
+                              key={i}
+                              className="w-8 h-8 rounded-full bg-gradient-to-br from-[#eefe92] to-[#4d7c0f] border-2 border-[#213d4f] flex items-center justify-center"
+                            >
+                              <span className="text-xs font-bold text-[#213d4f]">
+                                {["A", "R", "S", "M"][i]}
+                              </span>
+                            </div>
+                          ))}
+                          <div className="w-8 h-8 rounded-full bg-white/10 border-2 border-[#213d4f] flex items-center justify-center">
+                            <span className="text-xs font-bold text-white">+</span>
+                          </div>
+                        </div>
+                        <p className="text-white/60 text-xs">
+                          <span className="text-white font-semibold">3L+ people</span> checked their score this month
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center gap-1 justify-end mb-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-4 h-4 text-[#eefe92] fill-[#eefe92]" />
+                          ))}
+                        </div>
+                        <p className="text-white/60 text-xs">4.9/5 from 50K+ reviews</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Glowing Orbs */}
+                <div className="absolute -top-20 -left-20 w-40 h-40 bg-[#4d7c0f]/30 rounded-full blur-3xl" />
+                <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-[#eefe92]/20 rounded-full blur-3xl" />
+              </div>
+
+              {/* Bottom Stats Cards */}
+              <div className="grid grid-cols-3 gap-3 mt-4">
+                {[
+                  { value: "0", label: "Impact on Score", icon: Shield },
+                  { value: "60s", label: "Time to Check", icon: Clock },
+                  { value: "Free", label: "Forever", icon: Gift },
+                ].map((stat, i) => (
+                  <div
+                    key={i}
+                    className="relative p-4 bg-white/80 backdrop-blur-sm rounded-2xl border border-[#eefe92]/30 text-center group hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                  >
+                    <stat.icon className="w-5 h-5 text-[#4d7c0f] mx-auto mb-2 opacity-60 group-hover:opacity-100 transition-opacity" />
+                    <div className="text-2xl font-black text-[#213d4f]">{stat.value}</div>
+                    <div className="text-[10px] text-[#213d4f]/50 font-medium">{stat.label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Background Decoration */}
+        <div className="absolute top-1/2 left-0 w-[500px] h-[500px] bg-gradient-to-r from-[#eefe92]/20 to-transparent rounded-full blur-3xl -translate-y-1/2 -z-10" />
       </section>
 
       {/* Why Credit Score Matters - Enhanced Visual Section */}
