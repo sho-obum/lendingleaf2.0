@@ -40,14 +40,12 @@ import { cn } from "@/lib/utils";
 
 // Link data
 export const productLinks: NavItemType[] = [
-	{ title: "Website Builder", href: "#", description: "Create responsive websites with ease", icon: GlobeIcon },
-	{ title: "Cloud Platform", href: "#", description: "Deploy and scale apps in the cloud", icon: LayersIcon },
-	{ title: "Team Collaboration", href: "#", description: "Tools to help your teams work better together", icon: UserPlusIcon },
-	{ title: "Analytics", href: "#", icon: BarChart },
-	{ title: "Integrations", href: "#", icon: PlugIcon },
-	{ title: "E-Commerce", href: "#", icon: DollarSign },
-	{ title: "Security", href: "#", icon: Shield },
-	{ title: "API", href: "#", icon: GlobeIcon },
+	{ title: "Credit Score Check", href: "/credit-score", description: "Check your credit score instantly for free", icon: BarChart },
+	{ title: "Personal Loan", href: "/loans/personal", description: "Get up to ₹40L with minimal documentation", icon: DollarSign },
+	{ title: "Home Loan", href: "/loans/home", description: "Finance your dream home at best rates", icon: GlobeIcon },
+	{ title: "Credit Cards", href: "/#credit-cards", icon: Shield },
+	{ title: "Health Insurance", href: "#", icon: PlugIcon },
+	{ title: "Life Insurance", href: "#", icon: LayersIcon },
 ];
 
 export const companyLinks: NavItemType[] = [

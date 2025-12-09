@@ -230,6 +230,7 @@ export default function CreditCards() {
 
   return (
     <section
+      id="credit-cards"
       ref={sectionRef}
       className="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-32 -mt-20"
     >

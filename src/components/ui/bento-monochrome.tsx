@@ -468,6 +468,17 @@ function ServiceItem({ service, span = "", index = 0, isVisible = false, isHover
         {/* CTA Button - Enhanced */}
         <div className="mt-auto">
           <Button 
+            onClick={() => {
+              const routes: { [key: string]: string } = {
+                "Credit Score Check": "/credit-score",
+                "Personal Loan": "/loans/personal",
+                "Home Loan": "/loans/home",
+              };
+              const route = routes[title];
+              if (route) {
+                window.location.href = route;
+              }
+            }}
             className={`w-full rounded-xl font-semibold transition-all duration-500 group/btn overflow-hidden relative ${isLarge ? 'h-12' : 'h-10'}`}
             style={{
               background: isHovered ? `linear-gradient(135deg, ${accentColor}, ${accentColor}dd)` : 'transparent',
