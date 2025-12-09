@@ -48,7 +48,7 @@ const Hero = () => {
           </div> */}
 
           {/* Main Headline */}
-          <h1 className="font-termina lg:mt-24 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-[#213d4f] leading-[1.15] tracking-tight mt-4 sm:mt-6">
+          <h1 className="font-termina lg:mt-8 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-[#213d4f] leading-[1.15] tracking-tight mt-4 sm:mt-6">
             Know your score.
             <br />
             <span className="relative inline-block">
