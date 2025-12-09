@@ -557,13 +557,13 @@ function CreditCardForm({ isVisible }: { isVisible: boolean }) {
         </div> */}
 
         {/* Form Card */}
-        <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-[#eefe92]/50 shadow-2xl shadow-[#4d7c0f]/10 overflow-hidden">
-          {/* Decorative gradient */}
+        {/* <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-[#eefe92]/50 shadow-2xl shadow-[#4d7c0f]/10 overflow-hidden">
+        
           <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[#4d7c0f] via-[#22c55e] to-[#eefe92]" />
           
           <form onSubmit={handleSubmit} className="p-6 sm:p-8 lg:p-10">
             <div className="grid sm:grid-cols-2 gap-5 sm:gap-6">
-              {/* Name */}
+
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
                   <User className="w-4 h-4 text-[#4d7c0f]" />
@@ -579,7 +579,7 @@ function CreditCardForm({ isVisible }: { isVisible: boolean }) {
                 />
               </div>
 
-              {/* Phone */}
+            
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
                   <Phone className="w-4 h-4 text-[#4d7c0f]" />
@@ -595,7 +595,7 @@ function CreditCardForm({ isVisible }: { isVisible: boolean }) {
                 />
               </div>
 
-              {/* Email */}
+         
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
                   <Mail className="w-4 h-4 text-[#4d7c0f]" />
@@ -611,7 +611,7 @@ function CreditCardForm({ isVisible }: { isVisible: boolean }) {
                 />
               </div>
 
-              {/* Employment Type */}
+           
               <div className="space-y-2">
                 <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
                   <Briefcase className="w-4 h-4 text-[#4d7c0f]" />
@@ -632,7 +632,7 @@ function CreditCardForm({ isVisible }: { isVisible: boolean }) {
                 </select>
               </div>
 
-              {/* Monthly Income - Full Width */}
+       
               <div className="sm:col-span-2 space-y-2">
                 <label className="text-sm font-medium text-[#213d4f] flex items-center gap-2">
                   <IndianRupee className="w-4 h-4 text-[#4d7c0f]" />
@@ -657,7 +657,7 @@ function CreditCardForm({ isVisible }: { isVisible: boolean }) {
               </div>
             </div>
 
-            {/* Submit Button */}
+     
             <div className="mt-8 flex flex-col sm:flex-row items-center gap-4">
               <Button
                 type="submit"
@@ -686,10 +686,10 @@ function CreditCardForm({ isVisible }: { isVisible: boolean }) {
             </div>
           </form>
 
-          {/* Background decorations */}
+        
           <div className="absolute -top-20 -right-20 w-40 h-40 bg-[#eefe92]/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-[#22c55e]/10 rounded-full blur-3xl pointer-events-none" />
-        </div>
+        </div> */}
 
         {/* Trust indicators */}
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs text-[#213d4f]/50">
