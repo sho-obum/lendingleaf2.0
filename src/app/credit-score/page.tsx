@@ -49,6 +49,7 @@ export default function CreditScorePage() {
   const heroRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const [formVisible, setFormVisible] = useState(false);
+  const [showFloatingButton, setShowFloatingButton] = useState(false);
 
   // Intersection observer for scroll animations
   useEffect(() => {
@@ -65,6 +66,9 @@ export default function CreditScorePage() {
       ([entry]) => {
         if (entry.isIntersecting) {
           setFormVisible(true);
+          setShowFloatingButton(false); // Hide floating button when form is visible
+        } else {
+          setShowFloatingButton(true); // Show floating button when form is out of view
         }
       },
       { threshold: 0.2 }
@@ -1063,8 +1067,8 @@ export default function CreditScorePage() {
         </div>
       </section>
 
-      {/* Mobile Floating CTA Button */}
-      <div className="lg:hidden fixed bottom-6 left-4 right-4 z-50 animate-slide-up">
+      {/* Mobile Floating CTA Button - Only show when form is out of view */}
+      <div className={`lg:hidden fixed bottom-6 left-4 right-4 z-50 transition-all duration-300 ${showFloatingButton ? 'opacity-100 translate-y-0 pointer-events-auto' : 'opacity-0 translate-y-20 pointer-events-none'}`}>
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="w-full h-14 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold rounded-2xl shadow-2xl shadow-[#4d7c0f]/40 flex items-center justify-center gap-2 active:scale-95 transition-all duration-200"

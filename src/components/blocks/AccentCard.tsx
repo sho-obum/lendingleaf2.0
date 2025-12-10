@@ -430,7 +430,7 @@ export default function CreditScoreCard() {
                         onChange={(e) => { setName(e.target.value); handleInteraction(); }}
                         onFocus={() => { setFocusedField('name'); handleInteraction(); }}
                         onBlur={() => setFocusedField(null)}
-                        className={`h-12 sm:h-13 pt-4 text-xs sm:text-sm border-2 bg-[#f8fafc] rounded-xl pr-10 transition-all duration-300 peer ${
+                        className={`h-12 sm:h-13 pt-4 text-[17px] sm:text-sm border-2 bg-[#f8fafc] rounded-xl pr-10 transition-all duration-300 peer ${
                           focusedField === 'name' 
                             ? 'border-[#4d7c0f] bg-white ring-4 ring-[#eefe92]/20 shadow-lg shadow-[#4d7c0f]/5' 
                             : name ? 'border-[#22c55e]/30 bg-white' : 'border-[#213d4f]/10 hover:border-[#213d4f]/20 hover:bg-white'
@@ -459,7 +459,7 @@ export default function CreditScoreCard() {
                         onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); handleInteraction(); }}
                         onFocus={() => { setFocusedField('phone'); handleInteraction(); }}
                         onBlur={() => setFocusedField(null)}
-                        className={`h-12 sm:h-13 pt-4 text-xs sm:text-sm border-2 bg-[#f8fafc] rounded-xl pr-10 transition-all duration-300 peer ${
+                        className={`h-12 sm:h-13 pt-4 text-[17px] sm:text-sm border-2 bg-[#f8fafc] rounded-xl pr-10 transition-all duration-300 peer ${
                           focusedField === 'phone' 
                             ? 'border-[#4d7c0f] bg-white ring-4 ring-[#eefe92]/20 shadow-lg shadow-[#4d7c0f]/5' 
                             : phone ? 'border-[#22c55e]/30 bg-white' : 'border-[#213d4f]/10 hover:border-[#213d4f]/20 hover:bg-white'
