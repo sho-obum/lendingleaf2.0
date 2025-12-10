@@ -225,9 +225,9 @@ export default function CreditScoreCard() {
       displayScore = demoScore > 350 ? demoScore : "---";
       currentScoreValue = Math.max(MIN_SCORE, demoScore);
     } else {
-      // User has interacted, not transitioning: show "---", gauge at 300
+      // User has interacted, not transitioning: show "---", gauge at 100% (MAX_SCORE)
       displayScore = "---";
-      currentScoreValue = MIN_SCORE;
+      currentScoreValue = MAX_SCORE;
     }
   }
   
@@ -288,7 +288,7 @@ export default function CreditScoreCard() {
   };
 
   return (
-    <div className="w-full max-w-[520px]">
+    <div className="w-full max-w-[520px] mt-0 sm:mt-0">
       <div className="relative bg-white/95 backdrop-blur-xl border border-[#213d4f]/8 rounded-2xl sm:rounded-3xl shadow-[0_20px_60px_-15px_rgba(33,61,79,0.15)] overflow-hidden transition-all duration-300 hover:shadow-[0_25px_70px_-15px_rgba(33,61,79,0.2)]">
         {/* Animated gradient border top */}
         <div className="absolute top-0 left-0 right-0 h-1 sm:h-1.5 bg-gradient-to-r from-[#eefe92] via-[#a3e635] to-[#4d7c0f] bg-[length:200%_100%] animate-[shimmer_3s_ease-in-out_infinite]" />
@@ -385,10 +385,9 @@ export default function CreditScoreCard() {
                         />
                       );
                     })}
-                    {/* Scale labels */}
-                    <text x="-68" y="50" fontSize="9" fill="#9ca3af" fontWeight="600" textAnchor="middle">300</text>
-                    <text x="68" y="50" fontSize="9" fill="#9ca3af" fontWeight="600" textAnchor="middle">900</text>
-                    <text x="0" y="-70" fontSize="8" fill="#9ca3af" fontWeight="500" textAnchor="middle">600</text>
+                    {/* Scale labels - positioned at arc ends */}
+                    <text x="-78" y="-33" fontSize="10" fill="#9ca3af" fontWeight="500">300</text>
+                    <text x="-78" y="42" fontSize="10" fill="#9ca3af" fontWeight="500">900</text>
                   </g>
                 </svg>
                
