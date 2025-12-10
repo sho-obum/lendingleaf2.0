@@ -44,6 +44,8 @@ export default function CreditScorePage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [apiScore, setApiScore] = useState<number | null>(null);
+  const [apiError, setApiError] = useState<string | null>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const [formVisible, setFormVisible] = useState(false);
@@ -159,6 +161,45 @@ export default function CreditScorePage() {
     { range: "740-900", label: "Excellent", color: "emerald", gradient: "from-emerald-500 to-emerald-600", width: "100%" },
   ];
 
+  // Function to get score label and color based on score value
+  const getScoreDetails = (score: number) => {
+    if (score >= 740) return { label: "Excellent", color: "#22c55e", message: "Outstanding! You're eligible for premium loans with the best rates." };
+    if (score >= 670) return { label: "Good", color: "#84cc16", message: "Great score! You qualify for competitive interest rates and loan offers." };
+    if (score >= 580) return { label: "Fair", color: "#f59e0b", message: "Good start! Work on improving your score for better loan terms." };
+    return { label: "Poor", color: "#ef4444", message: "Focus on building your credit history for better loan opportunities." };
+  };
+
+  // Function to handle credit score check API call
+  const handleCheckScore = async () => {
+    setIsSubmitting(true);
+    setApiError(null);
+
+    try {
+      const response = await fetch("/api/credit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullname: formData.fullName,
+          mobile: formData.phone,
+          loanType: "credit-score-check",
+        }),
+      });
+      
+      const data = await response.json();
+
+      if (data.status && data.score) {
+        setApiScore(data.score);
+        setShowSuccess(true);
+      } else {
+        setApiError(data.msg || "Failed to fetch credit score. Please try again.");
+      }
+    } catch (error) {
+      setApiError("Network error. Please check your connection and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="overflow-hidden relative">
       {/* Unified Background Gradient */}
@@ -213,22 +254,22 @@ export default function CreditScorePage() {
       {/* Hero Section */}
       <section
         ref={heroRef}
-        className="relative min-h-[100dvh] px-4 sm:px-6 md:px-10 lg:px-14 xl:px-20 pt-20 pb-8 sm:pt-24 sm:pb-12 flex items-center"
+        className="relative min-h-[100dvh] px-1 sm:px-6 md:px-10 lg:px-14 xl:px-20 pt-16 pb-6 sm:pt-24 sm:pb-12 flex items-center"
       >
         <div className="max-w-7xl mx-auto w-full">
-          <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8 lg:gap-16 items-center">
+          <div className="grid lg:grid-cols-[1fr_1.1fr] gap-4 lg:gap-16 items-center">
             {/* Left Content */}
             <div
-              className={`order-2 lg:order-1 space-y-6 sm:space-y-8 ${
+              className={`order-2 lg:order-1 space-y-3 sm:space-y-8 px-3 sm:px-0 ${
                 isVisible ? "animate-slide-up" : "opacity-0"
               }`}
             >
               {/* Badge */}
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#eefe92]/40 border border-[#4d7c0f]/20 backdrop-blur-sm">
                 <Sparkles className="w-4 h-4 text-[#4d7c0f] animate-pulse" />
-                <span className="text-xs font-semibold text-[#4d7c0f] uppercase tracking-wider">
+                {/* <span className="text-xs font-semibold text-[#4d7c0f] uppercase tracking-wider"> */}
                   Free Credit Score Check
-                </span>
+                {/* </span> */}
               </div>
 
               <div className="space-y-4">
@@ -292,15 +333,17 @@ export default function CreditScorePage() {
 
             {/* Right Content - Credit Score Card */}
             <div
-              className={`order-1 lg:order-2 flex justify-center lg:justify-end ${
+              className={`order-1 lg:order-2 flex justify-center lg:justify-end mx-2 sm:mx-0 ${
                 isVisible ? "animate-scale-in" : "opacity-0"
               }`}
               style={{ animationDelay: "0.3s" }}
             >
-              <div className="relative">
+              <div className="relative w-full lg:w-auto">
                 {/* Glow Effect Behind Card */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#4d7c0f]/20 to-[#eefe92]/30 blur-3xl scale-110 animate-pulse-glow" />
-                <CreditScoreCard />
+                <div className="scale-105 sm:scale-100">
+                  <CreditScoreCard />
+                </div>
               </div>
             </div>
           </div>
@@ -329,10 +372,10 @@ export default function CreditScorePage() {
         <GridPattern className="absolute inset-0 -z-10 opacity-30" />
       </section>
 
-      {/* Credit Score Check Form Section */}
+      {/* Credit Score Check Form Section - Hidden on Mobile */}
       <section
         ref={formRef}
-        className="relative py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-10 lg:px-14 xl:px-20 overflow-hidden"
+        className="hidden lg:block relative py-16 sm:py-24 md:py-32 px-4 sm:px-6 md:px-10 lg:px-14 xl:px-20 overflow-hidden"
       >
         <div className="max-w-7xl mx-auto">
           <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
@@ -435,7 +478,11 @@ export default function CreditScorePage() {
                         </div>
 
                         <Button
-                          onClick={() => setFormStep(2)}
+                          onClick={() => {
+                            console.log("🔘 Continue button clicked - Moving to Step 2");
+                            console.log("📋 Current form data:", formData);
+                            setFormStep(2);
+                          }}
                           disabled={!formData.fullName || !formData.phone}
                           className="w-full h-13 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold rounded-xl shadow-lg shadow-[#4d7c0f]/25 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed group"
                         >
@@ -483,21 +530,36 @@ export default function CreditScorePage() {
                           </p>
                         </div>
 
+                        {/* Error Message */}
+                        {apiError && (
+                          <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+                            <div className="w-5 h-5 rounded-full bg-red-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                              <span className="text-white text-xs font-bold">!</span>
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-sm font-medium text-red-800">Error</p>
+                              <p className="text-xs text-red-600 mt-1">{apiError}</p>
+                            </div>
+                          </div>
+                        )}
+
                         <div className="flex gap-3">
                           <Button
                             variant="outline"
-                            onClick={() => setFormStep(1)}
+                            onClick={() => {
+                              setFormStep(1);
+                              setApiError(null);
+                            }}
                             className="h-13 px-6 border-2 border-[#213d4f]/10 text-[#213d4f] hover:bg-[#f8fdf2] rounded-xl"
                           >
                             Back
                           </Button>
                           <Button
                             onClick={() => {
-                              setIsSubmitting(true);
-                              setTimeout(() => {
-                                setIsSubmitting(false);
-                                setShowSuccess(true);
-                              }, 2000);
+                              console.log("🔘 Get My Free Score button clicked!");
+                              console.log("📋 Full form data:", formData);
+                              console.log("✅ Calling handleCheckScore...");
+                              handleCheckScore();
                             }}
                             disabled={!formData.dob || formData.pan.length !== 10 || isSubmitting}
                             className="flex-1 h-13 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold rounded-xl shadow-lg shadow-[#4d7c0f]/25 hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -557,19 +619,24 @@ export default function CreditScorePage() {
                     </h3>
                     <div className="inline-flex items-center gap-3 px-6 py-4 bg-gradient-to-r from-[#f8fdf2] to-[#eefe92]/30 rounded-2xl border border-[#4d7c0f]/20 mb-4">
                       <span className="text-sm text-[#213d4f]/60">Your Credit Score</span>
-                      <span className="text-4xl font-black text-[#4d7c0f]">752</span>
-                      <span className="px-2 py-1 bg-[#22c55e] text-white text-xs font-bold rounded-full">
-                        Good
+                      <span className="text-4xl font-black text-[#4d7c0f]">{apiScore || 0}</span>
+                      <span 
+                        className="px-2 py-1 text-white text-xs font-bold rounded-full"
+                        style={{ backgroundColor: apiScore ? getScoreDetails(apiScore).color : '#22c55e' }}
+                      >
+                        {apiScore ? getScoreDetails(apiScore).label : 'Good'}
                       </span>
                     </div>
                     <p className="text-[#213d4f]/60 mb-6 max-w-sm mx-auto">
-                      Great score! You're eligible for premium loans and credit cards with best rates.
+                      {apiScore ? getScoreDetails(apiScore).message : 'Loading your score details...'}
                     </p>
                     <Button
                       onClick={() => {
                         setShowSuccess(false);
                         setFormStep(1);
                         setFormData({ fullName: "", phone: "", dob: "", pan: "" });
+                        setApiScore(null);
+                        setApiError(null);
                       }}
                       variant="outline"
                       className="border-2 border-[#4d7c0f] text-[#4d7c0f] hover:bg-[#4d7c0f] hover:text-white rounded-xl"
@@ -995,6 +1062,18 @@ export default function CreditScorePage() {
           </div>
         </div>
       </section>
+
+      {/* Mobile Floating CTA Button */}
+      <div className="lg:hidden fixed bottom-6 left-4 right-4 z-50 animate-slide-up">
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="w-full h-14 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold rounded-2xl shadow-2xl shadow-[#4d7c0f]/40 flex items-center justify-center gap-2 active:scale-95 transition-all duration-200"
+        >
+          {/* <Sparkles className="w-5 h-5" /> */}
+          <span>Check My Score for Free</span>
+          <ArrowRight className="w-5 h-5" />
+        </button>
+      </div>
 
       {/* Why Choose Us Section */}
       <WhyChooseUs />
