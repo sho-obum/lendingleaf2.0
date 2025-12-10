@@ -211,9 +211,9 @@ export default function CreditScoreCard() {
     displayScore = animScore;
     currentScoreValue = animScore;
   } else if (step === 2) {
-    // Step 2: Analyzing - show nothing (handled separately)
+    // Step 2: Analyzing - show "---", gauge at 30%
     displayScore = "---";
-    currentScoreValue = MIN_SCORE;
+    currentScoreValue = MIN_SCORE + (MAX_SCORE - MIN_SCORE) * 0.3;
   } else if (step === 1) {
     // Step 1: Demo mode or transitioning
     if (isTransitioning && transitionScore !== null) {
@@ -354,19 +354,7 @@ export default function CreditScoreCard() {
                       filter="url(#glow)"
                       className={isDemoMode && !hasInteracted ? "" : "transition-all duration-500"}
                     />
-                    {/* Needle/Indicator dot at current position */}
-                    {progress > 0 && (
-                      <circle
-                        cx={Math.cos(START_ANGLE + progress * (END_ANGLE - START_ANGLE)) * ARC_RADIUS}
-                        cy={Math.sin(START_ANGLE + progress * (END_ANGLE - START_ANGLE)) * ARC_RADIUS}
-                        r="6"
-                        fill="white"
-                        stroke={bandColor}
-                        strokeWidth="3"
-                        filter="url(#dropShadow)"
-                        className={isDemoMode && !hasInteracted ? "" : "transition-all duration-500"}
-                      />
-                    )}
+
                     {/* Tick marks */}
                     {[0, 0.25, 0.5, 0.75, 1].map((tick, i) => {
                       const angle = START_ANGLE + tick * (END_ANGLE - START_ANGLE);
@@ -395,8 +383,7 @@ export default function CreditScoreCard() {
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   {step === 2 ? (
                     <div className="flex flex-col items-center gap-2">
-                      <Loader2 className="w-10 h-10 sm:w-12 sm:h-12 text-[#4d7c0f] animate-spin" />
-                      <span className="text-[10px] sm:text-xs text-[#213d4f]/50 animate-pulse">Analyzing...</span>
+                      <span className="text-[10px] sm:text-xs text-[#213d4f]/60 font-medium">Fetching your score<span className="inline-block w-5 text-left ml-1"><span className="inline-block animate-bounce" style={{animationDelay: '0s'}}>.</span><span className="inline-block animate-bounce" style={{animationDelay: '0.2s'}}>.</span><span className="inline-block animate-bounce" style={{animationDelay: '0.4s'}}>.</span></span></span>
                     </div>
                   ) : (
                     <>
