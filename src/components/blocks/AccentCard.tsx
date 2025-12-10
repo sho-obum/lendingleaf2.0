@@ -146,7 +146,7 @@ export default function CreditScoreCard() {
     
     let frameId: number;
     const startScore = transitionScore ?? demoScore;
-    const duration = 300; // fast 300ms fade down
+    const duration = 400; // smooth 400ms transition
     const startTime = performance.now();
     
     const animateTransition = (now: number) => {
@@ -154,15 +154,15 @@ export default function CreditScoreCard() {
       const progress = Math.min(1, elapsed / duration);
       // Ease out cubic for smooth deceleration
       const eased = 1 - Math.pow(1 - progress, 3);
-      // Animate down to MIN_SCORE
+      // Animate down to exactly MIN_SCORE (300) - our zero point
       const newScore = Math.round(startScore - (startScore - MIN_SCORE) * eased);
-      setTransitionScore(newScore);
+      setTransitionScore(Math.max(MIN_SCORE, newScore)); // Never go below 300
       
       if (progress < 1) {
         frameId = requestAnimationFrame(animateTransition);
       } else {
+        setTransitionScore(MIN_SCORE); // Ensure it lands exactly at 300
         setIsTransitioning(false);
-        setTransitionScore(null);
         setIsDemoMode(false);
       }
     };
@@ -217,12 +217,15 @@ export default function CreditScoreCard() {
   } else if (step === 1) {
     // Step 1: Demo mode or transitioning
     if (isTransitioning && transitionScore !== null) {
-      displayScore = transitionScore > MIN_SCORE ? transitionScore : "---";
-      currentScoreValue = transitionScore;
+      // During transition: show "---" but animate gauge to 300
+      displayScore = "---";
+      currentScoreValue = Math.max(MIN_SCORE, transitionScore);
     } else if (isDemoMode && !hasInteracted) {
+      // Demo mode: show animated score
       displayScore = demoScore > 350 ? demoScore : "---";
-      currentScoreValue = demoScore;
+      currentScoreValue = Math.max(MIN_SCORE, demoScore);
     } else {
+      // User has interacted, not transitioning: show "---", gauge at 300
       displayScore = "---";
       currentScoreValue = MIN_SCORE;
     }
@@ -307,37 +310,85 @@ export default function CreditScoreCard() {
                   <defs>
                     <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
                       <stop offset="0%" stopColor="#ef4444" />
-                      <stop offset="30%" stopColor="#f59e0b" />
-                      <stop offset="60%" stopColor="#22c55e" />
+                      <stop offset="25%" stopColor="#f59e0b" />
+                      <stop offset="50%" stopColor="#eab308" />
+                      <stop offset="75%" stopColor="#22c55e" />
                       <stop offset="100%" stopColor="#4d7c0f" />
                     </linearGradient>
+                    <linearGradient id="trackGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#e5e7eb" />
+                      <stop offset="100%" stopColor="#d1d5db" />
+                    </linearGradient>
                     <filter id="glow">
-                      <feGaussianBlur stdDeviation="4" result="blur"/>
+                      <feGaussianBlur stdDeviation="3" result="blur"/>
                       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
                     </filter>
-                    <filter id="softShadow">
-                      <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.1"/>
+                    <filter id="innerShadow">
+                      <feOffset dx="0" dy="2"/>
+                      <feGaussianBlur stdDeviation="2" result="blur"/>
+                      <feComposite in2="SourceAlpha" operator="arithmetic" k2="-1" k3="1" result="shadowDiff"/>
+                      <feFlood floodColor="#000" floodOpacity="0.15"/>
+                      <feComposite in2="shadowDiff" operator="in"/>
+                      <feComposite in2="SourceGraphic" operator="over"/>
+                    </filter>
+                    <filter id="dropShadow">
+                      <feDropShadow dx="0" dy="3" stdDeviation="4" floodOpacity="0.15"/>
                     </filter>
                   </defs>
                   <g transform="translate(100 100)">
-                    {/* Background track */}
-                    <path d={arcPath} fill="none" stroke="#e5e7eb" strokeWidth={16} strokeLinecap="round" filter="url(#softShadow)" />
+                    {/* Outer decorative ring */}
+                    <circle r="95" fill="none" stroke="#f1f5f9" strokeWidth="1" opacity="0.8" />
+                    {/* Background track with depth */}
+                    <path d={arcPath} fill="none" stroke="url(#trackGrad)" strokeWidth={18} strokeLinecap="round" filter="url(#dropShadow)" />
+                    <path d={arcPath} fill="none" stroke="#f8fafc" strokeWidth={12} strokeLinecap="round" opacity="0.5" />
                     {/* Progress arc */}
                     <path
                       d={arcPath}
                       fill="none"
                       stroke="url(#gaugeGrad)"
-                      strokeWidth={16}
+                      strokeWidth={14}
                       strokeLinecap="round"
                       pathLength={100}
                       strokeDasharray={100}
                       strokeDashoffset={100 - progress * 100}
                       filter="url(#glow)"
-                      className={isDemoMode && !hasInteracted ? "" : "transition-all duration-700"}
+                      className={isDemoMode && !hasInteracted ? "" : "transition-all duration-500"}
                     />
-                    {/* Scale markers - positioned at arc ends */}
-                    <text x="-78" y="-33" fontSize="10" fill="#9ca3af" fontWeight="500">300</text>
-                    <text x="-78" y="42" fontSize="10" fill="#9ca3af" fontWeight="500">900</text>
+                    {/* Needle/Indicator dot at current position */}
+                    {progress > 0 && (
+                      <circle
+                        cx={Math.cos(START_ANGLE + progress * (END_ANGLE - START_ANGLE)) * ARC_RADIUS}
+                        cy={Math.sin(START_ANGLE + progress * (END_ANGLE - START_ANGLE)) * ARC_RADIUS}
+                        r="6"
+                        fill="white"
+                        stroke={bandColor}
+                        strokeWidth="3"
+                        filter="url(#dropShadow)"
+                        className={isDemoMode && !hasInteracted ? "" : "transition-all duration-500"}
+                      />
+                    )}
+                    {/* Tick marks */}
+                    {[0, 0.25, 0.5, 0.75, 1].map((tick, i) => {
+                      const angle = START_ANGLE + tick * (END_ANGLE - START_ANGLE);
+                      const innerR = 70;
+                      const outerR = 74;
+                      return (
+                        <line
+                          key={i}
+                          x1={Math.cos(angle) * innerR}
+                          y1={Math.sin(angle) * innerR}
+                          x2={Math.cos(angle) * outerR}
+                          y2={Math.sin(angle) * outerR}
+                          stroke="#9ca3af"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                        />
+                      );
+                    })}
+                    {/* Scale labels */}
+                    <text x="-68" y="50" fontSize="9" fill="#9ca3af" fontWeight="600" textAnchor="middle">300</text>
+                    <text x="68" y="50" fontSize="9" fill="#9ca3af" fontWeight="600" textAnchor="middle">900</text>
+                    <text x="0" y="-70" fontSize="8" fill="#9ca3af" fontWeight="500" textAnchor="middle">600</text>
                   </g>
                 </svg>
                
@@ -383,37 +434,68 @@ export default function CreditScoreCard() {
                 <form onSubmit={handleSubmit} className="space-y-2.5 sm:space-y-3">
                   {/* Header */}
                  
-                  {/* Inputs */}
-                  <div className="space-y-2 sm:space-y-2.5">
-                    <div className="relative">
+                  {/* Inputs with floating labels */}
+                  <div className="space-y-3 sm:space-y-3.5">
+                    <div className="relative group">
                       <Input
-                        placeholder="Your name"
+                        id="name-input"
+                        placeholder=" "
                         value={name}
                         onChange={(e) => { setName(e.target.value); handleInteraction(); }}
                         onFocus={() => { setFocusedField('name'); handleInteraction(); }}
                         onBlur={() => setFocusedField(null)}
-                        className={`h-10 sm:h-11 text-xs sm:text-sm border-2 bg-[#f8fafc] rounded-lg sm:rounded-xl pr-8 transition-all duration-200 ${
-                          focusedField === 'name' ? 'border-[#4d7c0f] bg-white ring-2 ring-[#eefe92]/30' : 'border-[#213d4f]/10 hover:border-[#213d4f]/20'
+                        className={`h-12 sm:h-13 pt-4 text-xs sm:text-sm border-2 bg-[#f8fafc] rounded-xl pr-10 transition-all duration-300 peer ${
+                          focusedField === 'name' 
+                            ? 'border-[#4d7c0f] bg-white ring-4 ring-[#eefe92]/20 shadow-lg shadow-[#4d7c0f]/5' 
+                            : name ? 'border-[#22c55e]/30 bg-white' : 'border-[#213d4f]/10 hover:border-[#213d4f]/20 hover:bg-white'
                         }`}
                       />
-                      {name.length >= 2 && (
-                        <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#22c55e]" />
-                      )}
+                      <label 
+                        htmlFor="name-input"
+                        className={`absolute left-3 transition-all duration-200 pointer-events-none ${
+                          focusedField === 'name' || name 
+                            ? 'top-1.5 text-[9px] sm:text-[10px] font-semibold text-[#4d7c0f]' 
+                            : 'top-1/2 -translate-y-1/2 text-xs sm:text-sm text-[#213d4f]/40'
+                        }`}
+                      >
+                        Full Name
+                      </label>
+                      <div className={`absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-300 ${name.length >= 2 ? 'scale-100 opacity-100' : 'scale-50 opacity-0'}`}>
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#22c55e]" />
+                      </div>
                     </div>
-                    <div className="relative">
+                    <div className="relative group">
                       <Input
+                        id="phone-input"
                         type="tel"
-                        placeholder="10-digit mobile"
+                        placeholder=" "
                         value={phone}
                         onChange={(e) => { setPhone(e.target.value.replace(/\D/g, "").slice(0, 10)); handleInteraction(); }}
                         onFocus={() => { setFocusedField('phone'); handleInteraction(); }}
                         onBlur={() => setFocusedField(null)}
-                        className={`h-10 sm:h-11 text-xs sm:text-sm border-2 bg-[#f8fafc] rounded-lg sm:rounded-xl pr-8 transition-all duration-200 ${
-                          focusedField === 'phone' ? 'border-[#4d7c0f] bg-white ring-2 ring-[#eefe92]/30' : 'border-[#213d4f]/10 hover:border-[#213d4f]/20'
+                        className={`h-12 sm:h-13 pt-4 text-xs sm:text-sm border-2 bg-[#f8fafc] rounded-xl pr-10 transition-all duration-300 peer ${
+                          focusedField === 'phone' 
+                            ? 'border-[#4d7c0f] bg-white ring-4 ring-[#eefe92]/20 shadow-lg shadow-[#4d7c0f]/5' 
+                            : phone ? 'border-[#22c55e]/30 bg-white' : 'border-[#213d4f]/10 hover:border-[#213d4f]/20 hover:bg-white'
                         }`}
                       />
-                      {phone.length === 10 && (
-                        <CheckCircle className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#22c55e]" />
+                      <label 
+                        htmlFor="phone-input"
+                        className={`absolute left-3 transition-all duration-200 pointer-events-none ${
+                          focusedField === 'phone' || phone 
+                            ? 'top-1.5 text-[9px] sm:text-[10px] font-semibold text-[#4d7c0f]' 
+                            : 'top-1/2 -translate-y-1/2 text-xs sm:text-sm text-[#213d4f]/40'
+                        }`}
+                      >
+                        Mobile Number
+                      </label>
+                      <div className={`absolute right-3 top-1/2 -translate-y-1/2 transition-all duration-300 ${phone.length === 10 ? 'scale-100 opacity-100' : 'scale-50 opacity-0'}`}>
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-[#22c55e]" />
+                      </div>
+                      {phone && phone.length < 10 && (
+                        <span className="absolute right-10 top-1/2 -translate-y-1/2 text-[10px] text-[#213d4f]/40 font-medium">
+                          {phone.length}/10
+                        </span>
                       )}
                     </div>
                   </div>

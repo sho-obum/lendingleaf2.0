@@ -265,7 +265,7 @@ export default function CreditScorePage() {
               }`}
             >
               {/* Badge */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#eefe92]/40 border border-[#4d7c0f]/20 backdrop-blur-sm">
+              <div className="hidden lg:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#eefe92]/40 border border-[#4d7c0f]/20 backdrop-blur-sm">
                 <Sparkles className="w-4 h-4 text-[#4d7c0f] animate-pulse" />
                 {/* <span className="text-xs font-semibold text-[#4d7c0f] uppercase tracking-wider"> */}
                   Free Credit Score Check
