@@ -277,7 +277,7 @@ export default function CreditScorePage() {
               </div>
 
               <div className="space-y-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-[3.5rem] font-termina font-black text-[#213d4f] leading-[1.1] tracking-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-[3.5rem] font-termina font-black text-[#213d4f] leading-[1.1] tracking-tight mt-6 text-center lg:text-start lg:mt-0">
                   Know your{" "}
                   <span className="relative inline-block">
                     <span className="relative z-10 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] bg-clip-text text-transparent">
@@ -287,7 +287,7 @@ export default function CreditScorePage() {
                   </span>{" "}
                   <span className="text-[#213d4f]/80">unlock better</span>{" "}
                   <span className="relative">
-                    <span className="text-[#4d7c0f] text-4xl">₹</span>ates
+                    <span className="text-[#4d7c0f] lg:text-4xl text-2xl ml-2 ">₹</span>ates
                   </span>
                 </h1>
                 <p className="text-base sm:text-lg md:text-xl text-[#213d4f]/60 max-w-xl leading-relaxed">
@@ -318,7 +318,7 @@ export default function CreditScorePage() {
               </div>
 
               {/* Trust Badges */}
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="lg:flex flex-wrap items-center gap-3 hidden ">
                 {[
                   { icon: Shield, text: "Bank-grade Security" },
                   { icon: Zap, text: "60-Second Results" },
@@ -345,7 +345,7 @@ export default function CreditScorePage() {
               <div className="relative w-full lg:w-auto">
                 {/* Glow Effect Behind Card */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#4d7c0f]/20 to-[#eefe92]/30 blur-3xl scale-110 animate-pulse-glow" />
-                <div className="scale-105 sm:scale-100">
+                <div className="scale-105 sm:scale-100 -mt-12">
                   <CreditScoreCard />
                 </div>
               </div>
@@ -702,7 +702,7 @@ export default function CreditScorePage() {
                     </div>
                     <div>
                       <h3 className="text-xl font-bold text-white">Why Check Your Score?</h3>
-                      <p className="text-white/60 text-sm">Knowledge is power</p>
+                      <p className="text-white/60 text-sm ">Knowledge is power</p>
                     </div>
                   </div>
 

@@ -487,7 +487,7 @@ export default function CreditScoreCard() {
                   </div>
 
                   {/* Loan Type Toggle */}
-                  <div className="flex gap-1.5 sm:gap-2 p-1 sm:p-1.5 bg-[#f1f5f9] rounded-lg sm:rounded-xl">
+                  {/* <div className="flex gap-1.5 sm:gap-2 p-1 sm:p-1.5 bg-[#f1f5f9] rounded-lg sm:rounded-xl">
                     {(["personal", "home"] as const).map((type) => (
                       <button
                         key={type}
@@ -503,7 +503,7 @@ export default function CreditScoreCard() {
                         <span>{type === "personal" ? "Personal" : "Home"}</span>
                       </button>
                     ))}
-                  </div>
+                  </div> */}
 
                   {/* Submit Button */}
                   <Button
