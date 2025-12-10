@@ -8,6 +8,10 @@ import { Wallet, Home, CheckCircle, Lock, Loader2 } from "lucide-react";
 type Step = 1 | 2 | 3;
 type LoanType = "home" | "personal";
 
+interface CreditScoreCardProps {
+  onScoreComplete?: () => void;
+}
+
 const MIN_SCORE = 300;
 const MAX_SCORE = 900;
 const START_ANGLE = (-140 * Math.PI) / 180;
@@ -50,7 +54,7 @@ function getBandColor(band: string | null) {
   }
 }
 
-export default function CreditScoreCard() {
+export default function CreditScoreCard({ onScoreComplete }: CreditScoreCardProps = {}) {
   const [step, setStep] = React.useState<Step>(1);
   const [score, setScore] = React.useState<number | null>(null);
   const [animScore, setAnimScore] = React.useState<number | null>(null);
@@ -192,7 +196,14 @@ export default function CreditScoreCard() {
       const tRaw = Math.min(1, (now - startTime) / duration);
       const t = 1 - Math.pow(1 - tRaw, 4);
       setAnimScore(Math.round(from + (to - from) * t));
-      if (tRaw < 1) frameId = requestAnimationFrame(animate);
+      if (tRaw < 1) {
+        frameId = requestAnimationFrame(animate);
+      } else {
+        // Animation complete, trigger callback after a short delay
+        setTimeout(() => {
+          onScoreComplete?.();
+        }, 800);
+      }
     };
     frameId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(frameId);
@@ -382,8 +393,15 @@ export default function CreditScoreCard() {
                 {/* Center content */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   {step === 2 ? (
-                    <div className="flex flex-col items-center gap-2">
-                      <span className="text-[10px] sm:text-xs text-[#213d4f]/60 font-medium">Fetching your score<span className="inline-block w-5 text-left ml-1"><span className="inline-block animate-bounce" style={{animationDelay: '0s'}}>.</span><span className="inline-block animate-bounce" style={{animationDelay: '0.2s'}}>.</span><span className="inline-block animate-bounce" style={{animationDelay: '0.4s'}}>.</span></span></span>
+                    <div className="flex flex-col items-center gap-1">
+                      <span className="text-lg sm:text-xl md:text-2xl text-[#213d4f] font-bold text-center leading-none">
+                        Fetching your score
+                      </span>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="inline-block w-3 h-3 rounded-full bg-[#213d4f] animate-bounce" style={{ animationDelay: '0s' }} />
+                        <span className="inline-block w-3 h-3 rounded-full bg-[#213d4f] animate-bounce" style={{ animationDelay: '0.15s' }} />
+                        <span className="inline-block w-3 h-3 rounded-full bg-[#213d4f] animate-bounce" style={{ animationDelay: '0.3s' }} />
+                      </div>
                     </div>
                   ) : (
                     <>
@@ -509,11 +527,13 @@ export default function CreditScoreCard() {
                   <Button
                     type="submit"
                     disabled={!isFormValid}
-                    className={`w-full h-10 sm:h-12 text-xs sm:text-sm font-bold rounded-lg sm:rounded-xl transition-all duration-300 cursor-pointer ${
-                      isFormValid 
-                        ? 'bg-[#213d4f] hover:bg-[#1a3240] text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5' 
-                        : 'bg-[#213d4f]/20 text-[#213d4f]/40'
+                    title={!isFormValid ? "Enter full name and a 10-digit mobile number" : undefined}
+                    className={`w-full h-10 sm:h-12 text-xs sm:text-sm font-bold rounded-lg sm:rounded-xl transition-all duration-300 ${
+                      isFormValid
+                        ? 'bg-[#213d4f] hover:bg-[#1a3240] text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5 cursor-pointer'
+                        : 'bg-gradient-to-r from-[#213d4f] via-[#2d5a6b] to-[#213d4f] text-white opacity-90 shadow-sm cursor-not-allowed'
                     }`}
+                    aria-disabled={!isFormValid}
                   >
                     {isFormValid ? (
                       <span className="flex items-center gap-2">
@@ -522,7 +542,7 @@ export default function CreditScoreCard() {
                       </span>
                     ) : (
                       <span className={`${!hasInteracted ? 'animate-pulse' : ''}`}>
-                        {!hasInteracted ? "Try it — Enter your details" : "Enter details above"}
+                        {!hasInteracted ? "Try it - Enter your details" : "Enter details above"}
                       </span>
                     )}
                   </Button>
@@ -552,32 +572,20 @@ export default function CreditScoreCard() {
               )}
 
               {step === 3 && band && (
-                <div className="space-y-3 sm:space-y-4 animate-in fade-in-0 slide-in-from-right-4 duration-500">
+                <div className="space-y-3 sm:space-y-4 animate-in fade-in-0 slide-in-from-right-4 duration-500 ">
                   <div>
-                    <p className="text-lg sm:text-xl font-bold text-[#213d4f]">
+                    <p className="text-lg sm:text-xl font-bold text-[#213d4f] text-center">
                       <span style={{ color: bandColor }}>{band}</span> score!
                     </p>
-                    <p className="text-xs sm:text-sm text-[#213d4f]/60 mt-1">
+                    <p className="text-xs sm:text-sm text-[#213d4f]/60 mt-1 text-center">
                       {band === "Excellent" && `Great job, ${name.split(" ")[0]}! You qualify for premium rates.`}
                       {band === "Good" && `Nice, ${name.split(" ")[0]}! You'll get competitive offers.`}
                       {band === "Fair" && `${name.split(" ")[0]}, you're close to better rates!`}
                       {band === "Poor" && `${name.split(" ")[0]}, let's find options for you.`}
                     </p>
                   </div>
-                  <div className="flex gap-1.5 sm:gap-2">
-                    <Button
-                      onClick={handleReset}
-                      variant="outline"
-                      className="h-9 sm:h-11 px-3 sm:px-4 text-[10px] sm:text-xs font-medium border-2 border-[#213d4f]/10 text-[#213d4f]/70 rounded-lg sm:rounded-xl hover:bg-[#f8fafc] cursor-pointer"
-                    >
-                      ↻ Again
-                    </Button>
-                    <Button
-                      className="h-9 sm:h-11 flex-1 text-xs sm:text-sm font-bold rounded-lg sm:rounded-xl cursor-pointer bg-[#213d4f] hover:bg-[#1a3240] text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
-                    >
-                      View Loan Offers →
-                    </Button>
-                  </div>
+           
+           
                 </div>
               )}
             </div>
