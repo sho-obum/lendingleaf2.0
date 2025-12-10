@@ -394,7 +394,7 @@ export default function CreditScoreCard({ onScoreComplete }: CreditScoreCardProp
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                   {step === 2 ? (
                     <div className="flex flex-col items-center gap-1">
-                      <span className="text-lg sm:text-xl md:text-2xl text-[#213d4f] font-bold text-center leading-none">
+                      <span className="text-xs sm:text-sm md:text-base text-[#213d4f] font-bold text-center leading-none">
                         Fetching your score
                       </span>
                       <div className="flex items-center gap-2 mt-2">

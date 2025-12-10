@@ -522,12 +522,12 @@ export default function CreditScorePage() {
               <div className="space-y-6">
                 {/* Section Header */}
                 <div className="text-center lg:text-left">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#eefe92]/30 border border-[#4d7c0f]/20 mb-4">
+                  {/* <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#eefe92]/30 border border-[#4d7c0f]/20 mb-4">
                     <CheckCircle2 className="w-4 h-4 text-[#4d7c0f]" />
                     <span className="text-xs font-semibold text-[#4d7c0f] uppercase tracking-wider">
                       Personalized for You
                     </span>
-                  </div>
+                  </div> */}
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-termina font-black text-[#213d4f] mb-3 leading-tight">
                     Your{" "}
                     <span className="relative inline-block">
@@ -542,59 +542,85 @@ export default function CreditScorePage() {
                   </p>
                 </div>
 
-                {/* Scrollable Offers Container */}
-                <div className="max-h-[70vh] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-[#4d7c0f]/20 scrollbar-track-transparent hover:scrollbar-thumb-[#4d7c0f]/40">
+                {/* Offers Container - Vertical Stack */}
+                <div className="space-y-4">
                   {/* Offer Cards */}
                   {[
                     {
                       name: "Navi Personal Loan",
                       highlights: ["Up to ₹20 lakhs at 10.49% p.a.", "Instant approval in 5 minutes"],
+                      badge: "Fastest",
                     },
                     {
                       name: "HDFC Bank Personal Loan",
                       highlights: ["Pre-approved offer at 10.75% p.a.", "No prepayment charges"],
+                      badge: "Trusted",
                     },
                     {
                       name: "ICICI Bank FlexiLoan",
                       highlights: ["Flexible EMI options available", "₹50,000 to ₹15 lakhs"],
+                      badge: "Flexible",
                     },
                     {
                       name: "Bajaj Finserv Personal Loan",
                       highlights: ["Get up to ₹25 lakhs", "Minimal documentation required"],
+                      badge: "Best Amount",
                     },
                     {
                       name: "Tata Capital Personal Loan",
                       highlights: ["Competitive rates from 10.99%", "Quick disbursal in 48 hours"],
+                      badge: "Quick",
                     },
                   ].map((offer, index) => (
                     <div
                       key={index}
-                      className="bg-white rounded-2xl border border-[#213d4f]/8 p-5 shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                      className="group relative bg-white rounded-2xl border border-[#213d4f]/8 p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-2 overflow-hidden cursor-pointer"
                     >
-                      {/* Row 1: Details and Logo */}
-                      <div className="grid grid-cols-[1fr_80px] gap-4 mb-4">
-                        {/* Col 1: Heading and Highlights */}
-                        <div>
-                          <h3 className="text-lg font-bold text-[#213d4f] mb-3">{offer.name}</h3>
-                          <ul className="space-y-2">
-                            {offer.highlights.map((highlight, i) => (
-                              <li key={i} className="flex items-start gap-2 text-sm text-[#213d4f]/70">
-                                <CheckCircle2 className="w-4 h-4 text-[#4d7c0f] flex-shrink-0 mt-0.5" />
-                                <span>{highlight}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        {/* Col 2: Logo Placeholder */}
-                        <div className="w-20 h-20 rounded-xl bg-gradient-to-br from-[#f8fdf2] to-[#eefe92]/20 border-2 border-[#4d7c0f]/10 flex items-center justify-center">
-                          <span className="text-2xl font-black text-[#4d7c0f]/30">Logo</span>
+                      {/* Gradient overlay on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#4d7c0f]/0 to-[#eefe92]/0 group-hover:from-[#4d7c0f]/5 group-hover:to-[#eefe92]/10 transition-all duration-300" />
+                      
+                      {/* Logo Badge at top right */}
+                      <div className="absolute top-3 sm:top-4 right-3 sm:right-4">
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-lg bg-gradient-to-br from-[#f8fdf2] to-[#eefe92]/20 border-2 border-[#4d7c0f]/15 flex items-center justify-center flex-shrink-0 group-hover:border-[#4d7c0f]/30 group-hover:shadow-lg transition-all duration-300">
+                          <span className="text-[8px] sm:text-[10px] font-black text-[#4d7c0f]/40 text-center px-1">{["Navi", "HDFC", "ICICI", "Bajaj", "Tata"][index]}</span>
                         </div>
                       </div>
-                      {/* Row 2: CTA Button */}
-                      <button className="w-full h-12 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold rounded-xl shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-0.5 flex items-center justify-center gap-2">
-                        <span>Apply Now</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
+
+                      {/* Main Content */}
+                      <div className="relative z-10">
+                        {/* Header with Logo - Stack on mobile */}
+                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4 pr-16 sm:pr-0">
+                          <div className="flex-1 min-w-0">
+                            <h3 className="text-base sm:text-lg md:text-xl font-bold text-[#213d4f] mb-1 group-hover:text-[#4d7c0f] transition-colors line-clamp-2">{offer.name}</h3>
+                            <div className="h-1 w-12 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          </div>
+                          {/* Logo Placeholder - Desktop only */}
+                          <div className="hidden sm:flex w-16 h-16 rounded-xl bg-gradient-to-br from-[#f8fdf2] to-[#eefe92]/20 border-2 border-[#4d7c0f]/10 items-center justify-center flex-shrink-0 group-hover:border-[#4d7c0f]/30 transition-colors">
+                            <span className="text-[9px] sm:text-xs font-black text-[#4d7c0f]/30 text-center">Logo</span>
+                          </div>
+                        </div>
+
+                        {/* Highlights - Responsive layout */}
+                        <ul className="space-y-2 sm:space-y-2.5 mb-4 sm:mb-6 w-full sm:max-w-[85%]">
+                          {offer.highlights.map((highlight, i) => (
+                            <li key={i} className="flex items-start gap-2 sm:gap-3 text-xs sm:text-sm text-[#213d4f]/70 group-hover:text-[#213d4f] transition-colors">
+                              <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-[#4d7c0f]/20 flex items-center justify-center flex-shrink-0 -mt-0.5 sm:mt-0 group-hover:bg-[#4d7c0f]/40 transition-colors">
+                                <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-[#4d7c0f]" />
+                              </div>
+                              <span className="leading-snug">{highlight}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        {/* CTA Button - Responsive sizing */}
+                        <button className="w-full h-10 sm:h-12 bg-gradient-to-r from-[#4d7c0f] to-[#22c55e] hover:from-[#3d6310] hover:to-[#1a9e4a] text-white font-bold text-sm sm:text-base rounded-lg sm:rounded-xl shadow-md hover:shadow-lg active:shadow-sm transition-all duration-300 hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-1.5 sm:gap-2 group/btn">
+                          <span>Apply Now</span>
+                          <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                        </button>
+                      </div>
+
+                      {/* Decorative accent */}
+                      <div className="absolute bottom-0 right-0 w-20 h-20 bg-[#eefe92]/20 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
                     </div>
                   ))}
                 </div>
