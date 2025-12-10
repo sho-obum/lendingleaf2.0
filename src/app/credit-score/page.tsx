@@ -142,7 +142,37 @@ export default function CreditScorePage() {
     try {
       const mq = window.matchMedia('(max-width: 1024px)');
       if (mq.matches) {
+        // Smooth scroll to top on mobile/tablet
         window.scrollTo({ top: 0, behavior: 'smooth' });
+
+        // Trigger a small confetti burst after scroll starts. Dynamically import
+        // the lightweight `canvas-confetti` package so we only load it client-side
+        // and when needed.
+        setTimeout(async () => {
+          try {
+            const mod = await import('canvas-confetti');
+            const confetti = (mod && (mod as any).default) || mod;
+
+            // Multiple bursts for a fuller effect
+            confetti({
+              particleCount: 60,
+              spread: 60,
+              origin: { x: 0.5, y: 0.2 },
+            });
+            confetti({
+              particleCount: 40,
+              spread: 90,
+              origin: { x: 0.1, y: 0.3 },
+            });
+            confetti({
+              particleCount: 40,
+              spread: 90,
+              origin: { x: 0.9, y: 0.3 },
+            });
+          } catch (err) {
+            // If the import or confetti fails, ignore — not critical
+          }
+        }, 300);
       }
     } catch (e) {
       // window or matchMedia may not be available in some environments — fail silently
