@@ -136,6 +136,19 @@ export default function CreditScorePage() {
     };
   }, []);
 
+  // Scroll to top when scoreComplete flips true (mobile only)
+  useEffect(() => {
+    if (!scoreComplete) return;
+    try {
+      const mq = window.matchMedia('(max-width: 1024px)');
+      if (mq.matches) {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    } catch (e) {
+      // window or matchMedia may not be available in some environments — fail silently
+    }
+  }, [scoreComplete]);
+
   // Animate stats counter
   useEffect(() => {
     if (!isVisible) return;
@@ -629,12 +642,12 @@ export default function CreditScorePage() {
 
             {/* Right Content - Credit Score Card */}
             <div
-              className={`order-1 lg:order-2 flex justify-center lg:justify-end mx-2 sm:mx-0 ${
+              className={`order-1 lg:order-2 flex justify-center lg:justify-start mx-2 sm:mx-0 ${
                 isVisible ? "animate-scale-in" : "opacity-0"
               }`}
               style={{ animationDelay: "0.3s" }}
             >
-              <div className="relative w-full lg:w-auto">
+              <div className="relative w-full lg:w-auto -mt-14 lg:mt-0 ">
                 {/* Glow Effect Behind Card */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#4d7c0f]/20 to-[#eefe92]/30 blur-3xl scale-110 animate-pulse-glow" />
                 <div className="sm:scale-100">
